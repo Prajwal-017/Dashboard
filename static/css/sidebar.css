@@ -1,0 +1,406 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --main-color: rgba(67, 191, 216, 0.6);
+  --main-color-dark: #607579;
+  --main-color-light: #8da5aa;
+  --text-color: #000000;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+.sidebar {
+  height: 100%;
+  background-color: var(--main-color);
+  width: 200px;
+  padding: 10px ;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.5s ease-in-out;
+  overflow-inline: scroll;
+  z-index: 1000;
+  position: fixed;
+}
+
+.sidebar::before {
+  content: "";
+  position: absolute;
+  width: 2rem;
+  height: 100%;
+  top: 0;
+  left: 100%;
+}
+/* Sidebar closed state */
+.sidebar.sidebar-closed {
+  width: 0; /* Hide the sidebar */
+  overflow: hidden; /* Prevent content overflow */
+  transition: width 0.4s; /* Smooth transition */
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  color: #1f2027;
+  display: flex;
+  flex-direction: column;
+}
+
+main h1 {
+  margin-bottom: 1rem;
+}
+
+main .copyright {
+  margin-top: auto;
+  font-size: 0.9rem;
+}
+
+main .copyright span {
+  color: var(--main-color);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.sidebar-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.sidebar-top .logo {
+  width: 2.1rem;
+  margin: 0 10px;
+  border-radius: 50%;
+}
+
+.sidebar-top h3 {
+  padding-left: 0.5rem;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #404a4c;
+}
+
+.shrink-btn {
+  position: absolute;
+  top: 50%;
+  height: 27px;
+  padding: 0 0.3rem;
+  background-color: var(--main-color);
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px -3px rgba(70, 46, 118, 0.3);
+  right: -2.65rem;
+  transform: translateY(-50%) translateX(-8px);
+  opacity: 1;
+  pointer-events: none;
+  transition: 0.3s;
+  display: none;
+}
+
+.shrink-btn i {
+  line-height: 27px;
+  transition: 0.3s;
+}
+
+.shrink-btn:hover {
+  background-color: var(--main-color-dark);
+}
+
+.sidebar:hover .shrink-btn,
+.shrink-btn.hovered {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.sidebar-links ul {
+  position: relative;
+}
+
+.sidebar-links li {
+  position: relative;
+  padding: 2.5px 0;
+}
+
+.sidebar-links a {
+  color: var(--text-color);
+  font-weight: 400;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  height: 53px;
+}
+
+.icon {
+  font-size: 1.3rem;
+  text-align: center;
+  min-width: 3.7rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  align-self: center;
+}
+
+.icon i {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  transition: 0.3s;
+}
+
+.icon i:last-child {
+  opacity: 0;
+  color: #fff;
+}
+
+.sidebar-links a.active,
+.sidebar-links a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.sidebar-links a .link {
+  transition: opacity 0.3s 0.2s, color 0.3s;
+}
+
+.sidebar-links a.active i:first-child {
+  opacity: 0;
+}
+
+.sidebar-links a.active i:last-child {
+  opacity: 1;
+}
+
+.sidebar-links h4 {
+  position: relative;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0 0.8rem;
+  color: var(--text-color);
+  letter-spacing: 0.5px;
+  height: 45px;
+  line-height: 45px;
+  transition: opacity 0.3s 0.2s, height 0.5s 0s;
+}
+
+
+/* When the menu shrinks */
+.hide {
+  transition: opacity 0.8s 0.2s;
+}
+
+body.shrink .sidebar {
+  width: 4rem;
+  padding: 5px;
+}
+
+body.shrink .sidebar {
+  align-self: center;
+}
+
+body.shrink .hide {
+  opacity: 0;
+  pointer-events: none;
+  transition-delay: 0s;
+}
+
+body.shrink .shrink-btn i {
+  transform: rotate(-180deg);
+}
+
+body.shrink .sidebar-links h4 {
+  height: 10px;
+}
+
+body.shrink .account {
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 0.3s 0.3s, color 0.3s 0s;
+}
+
+body.shrink .admin-profile {
+  max-width: 0;
+  transition: opacity 0.3s 0s, max-width 0.7s 0s ease-in-out;
+}
+
+body.shrink .tooltip {
+  display: grid;
+}
+
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    display: inline;
+    width: 35%;
+  }
+  
+  .shrink-btn {
+    display: inline;
+  }
+  .sidebar-links a {
+    font-size: 0.8rem; /* Smaller font size */
+  }
+
+  .icon {
+    font-size: 1.1rem; /* Smaller icon size */
+  }
+
+  .sidebar-top h3 {
+    font-size: 1rem; /* Smaller logo text */
+  }
+
+  .sidebar-links h4 {
+    font-size: 0.75rem; /* Smaller section headers */
+  }
+
+  .account {
+    width: 3rem; /* Smaller width */
+    font-size: 1.1rem; /* Smaller font size */
+  }
+
+  .admin-profile img {
+    width: 2.5rem; /* Smaller profile image */
+  }
+
+}
+
+@media screen and (max-width: 480px) {
+  .sidebar {
+    width: 50%; /* Minimum width */
+  }
+  .shrink-btn {
+    display: inline;
+  }
+
+  .sidebar-links a {
+    font-size: 0.8rem; /* Smaller font size */
+  }
+
+  .icon {
+    font-size: 1.1rem; /* Smaller icon size */
+  }
+
+  .sidebar-top h3 {
+    font-size: 1rem; /* Smaller logo text */
+  }
+
+  .sidebar-links h4 {
+    font-size: 0.75rem; /* Smaller section headers */
+  }
+
+  .account {
+    width: 3rem; /* Smaller width */
+    font-size: 1.1rem; /* Smaller font size */
+  }
+}
+
+/* Prevent shrinking on larger screens */
+@media screen and (min-width: 1025px) {
+  .shrink-btn {
+    display: none;
+  }
+
+  body.shrink .sidebar {
+    width: 200px; /* Ensures the sidebar doesn't shrink on large screens */
+  }
+
+  body.shrink .hide,
+  body.shrink .account,
+  body.shrink .admin-profile {
+    opacity: 1;
+    pointer-events: all;
+    max-width: 100%;
+  }
+
+  body.shrink .sidebar-links h4 {
+    height: 45px;
+  }
+
+  body.shrink .tooltip {
+    display: none;
+  }
+}
+
+.sidebar-toggle {
+  display: none; /* Hidden by default */
+  width: 40px;
+  height: 40px;
+  background-color: var(--main-color);
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.sidebar-toggle span {
+  display: block;
+  width: 30px;
+  height: 3px;
+  margin: 6px auto;
+  background-color: #fff;
+  transition: all 0.3s;
+}
+
+/* Sidebar open/close state */
+.sidebar.sidebar-open {
+  width: 200px;
+}
+
+
+/* Optional: Customize the separator line if needed */
+hr.my-4 {
+    border: 0;
+    height: 1px;
+    background: #000000;
+}
+
+
+/* Loader Wrapper */
+#loader-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.93);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Loader Spinner */
+#loader {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid rgba(67, 191, 216, 0.6); /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+/* Spin Animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

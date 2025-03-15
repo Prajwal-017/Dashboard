@@ -1,0 +1,99 @@
+#infographic .circle {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    border: 7px double;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    position: absolute;
+    left: 50%;
+    margin: 40px 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.1), rgba(0,0,0,0.2));
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+ }
+ 
+ #infographic section:nth-child(odd) .circle {
+    transform: translateX(-100%);
+ }
+ 
+ #infographic article {
+    max-width: 410px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    left: 50%;
+    position: relative;
+ }
+ 
+ #infographic article header {
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+ }
+ 
+ #infographic article header i {
+    display: flex;
+    font-size: 2em;
+    border-radius: 50%;
+    background-clip: padding-box;
+    padding: 14px;
+    transition: transform 0.4s;
+    color: #fff;
+    border: 16px solid var(--bs-dark);
+    margin: -16px 0 -16px -20px;
+    transition: all 0.3s ease;
+ }
+ 
+ #infographic article:hover header i {
+    transform: scale(1.2);
+ }
+ 
+ #infographic article.active header i {
+    transform: none;
+ }
+ 
+ #infographic article .body {
+    background: var(--bgColor);
+    padding: 0 20px;
+    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+    max-height: 0;
+    transition: max-height 0.5s, padding 0.5s;
+    overflow: hidden;
+ }
+ 
+ #infographic article .body .btn {
+    padding: 3px 10px;
+    text-transform: uppercase;
+ }
+ 
+ #infographic :nth-child(even) article {
+    text-align: right;
+    transform: translateX(-100%);
+ }
+ 
+ #infographic :nth-child(even) article header {
+    flex-flow: row-reverse;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+ }
+ 
+ #infographic :nth-child(even) article header i {
+    margin: -16px -20px -16px 0;
+ }
+ 
+ #infographic section:nth-child(odd) article.active header {
+    border-bottom-right-radius: 0;
+ }
+ 
+ #infographic section:nth-child(even) article.active header {
+    border-bottom-left-radius: 0;
+ }
+ 
+ #infographic article.active .body {
+    padding: 20px;
+    max-height: 300px;
+    border: 1px solid;
+ }
+ 

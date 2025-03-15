@@ -1,0 +1,837 @@
+{% extends "sidebar.html" %} {% block head %} {{ super() }}
+<title>Smart Shopping - Graph</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+<link rel="stylesheet" rel href="static/css/productbtn.css" rel="stylesheet">
+<link rel="stylesheet" rel href="static/css/dashboardbtn.css" rel="stylesheet">
+
+
+<style>
+    /* General Body Styling */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgba(205, 243, 251, 0.6);
+    transition: background-color 0.3s ease;
+}
+
+/* Heading Styling */
+h1 {
+    font-size: 3rem; /* Adjust the size as needed */
+    font-family: "Arial", sans-serif; /* Clean, modern font */
+    font-weight: 700; /* Bold text */
+    color: #333; /* Dark text color for contrast */
+    text-align: center; /* Center-align the heading */
+    margin: 20px 0; /* Vertical spacing */
+    position: relative; /* For positioning pseudo-elements */
+    line-height: 1.2; /* Adjust line-height for better readability */
+}
+
+h1::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 0, 149, 0.679), rgba(0, 204, 255, 0.696)); /* Gradient background */
+    border-radius: 50%;
+    z-index: -1;
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.3; /* Slightly transparent background */
+}
+
+h1::after {
+    content: " ";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px; /* Underline height */
+    border-radius: 5px;
+}
+
+/* Chart Container Styling */
+.chart-container {
+    height: 300px;
+    background-color: rgba(255, 255, 255, 0.481);
+    border-radius: 15px;
+    padding: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.274);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.chart-container:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+/* KPI Card Styling */
+.kpi {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 17px rgba(82, 63, 105, 0.585);
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 15px; /* Spacing between KPI cards */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 10px;
+}
+
+.kpi:hover {
+    background-color: #f9f9f9;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress Circle Styling */
+.progress-circle {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.progress-circle:hover {
+    transform: scale(1.05);
+}
+
+.progress-circle svg {
+    transform: rotate(-90deg); /* Rotate SVG to start progress from the top */
+}
+
+.circle-text {
+    position: absolute;
+    font-size: 20px;
+    color: #868ca0;
+    font-weight: 700;
+    text-align: center;
+    line-height: 100px; /* Center text vertically */
+}
+
+/* Data Container Styling */
+.data-container h6 {
+    font-size: 28px;
+    color: #000000;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.data-container p {
+    background: #0acf97;
+    border-radius: 17px;
+    color: white;
+    font-size: 12px;
+    padding: 2px 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.data-container p:hover {
+    background: #0a9a82;
+    transform: scale(1.15);
+}
+
+.indicators-card {
+    position: relative; /* Required for pseudo-element positioning */
+    background-color: white;
+    box-shadow: 0 0 16px black;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 40px;
+    margin-bottom: 10px;
+    width: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1; /* Make sure content stays on top */
+}
+
+.indicators-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/static/img/money.gif");
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+    opacity: 0.3; /* Adjust the opacity value here */
+    z-index: -1; /* Send the background behind content */
+}
+
+
+.indicators-card h4 {
+    font-size: 2rem;
+    color: rgb(247, 19, 19);
+}
+
+.indicators-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+
+@keyframes sh0 {
+    0% {
+        transform: rotate(0deg) translate3d(0, 0, 0);
+    }
+    25% {
+        transform: rotate(7deg) translate3d(0, 0, 0);
+    }
+    50% {
+        transform: rotate(-7deg) translate3d(0, 0, 0);
+    }
+    75% {
+        transform: rotate(1deg) translate3d(0, 0, 0);
+    }
+    100% {
+        transform: rotate(0deg) translate3d(0, 0, 0);
+    }
+}
+
+
+/* Media Queries */
+@media (max-width: 1200px) {
+    .chart-container {
+        height: 250px;
+        padding: 10px;
+    }
+
+    .kpi {
+        margin-top: 20px;
+    }
+
+    .indicators-card {
+        font-size: 36px;
+    }
+
+
+}
+
+@media (max-width: 992px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .progress-circle {
+        width: 80px;
+        height: 80px;
+    }
+
+    .circle-text {
+        font-size: 18px;
+        line-height: 80px;
+    }
+
+    .data-container h6 {
+        font-size: 24px;
+    }
+
+    .data-container p {
+        font-size: 10px;
+        padding: 2px 4px;
+    }
+
+    .indicators-card {
+        font-size: 32px;
+    }
+
+    .indicators-card h4 {
+        font-size: 1.5rem;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 200px;
+    }
+
+    .progress-circle {
+        width: 60px;
+        height: 60px;
+    }
+
+    .circle-text {
+        font-size: 16px;
+        line-height: 60px;
+    }
+
+    .data-container h6 {
+        font-size: 20px;
+    }
+
+    .data-container p {
+        font-size: 8px;
+        padding: 2px 3px;
+    }
+
+    .indicators-card {
+        font-size: 28px;
+    }
+
+    .indicators-card h4 {
+        font-size: 1.25rem;
+    }
+
+}
+
+@media (max-width: 576px) {
+    .chart-container {
+        height: 350px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .progress-circle {
+        width: 50px;
+        height: 50px;
+    }
+
+    .circle-text {
+        font-size: 10px;
+        line-height: 50px;
+    }
+
+    .data-container h6 {
+        padding-top: 10px;
+        font-size: 12px;
+    }
+
+    .data-container p {
+        font-size: 7px;
+        padding: 2px 3px;
+    }
+
+    .indicators-card {
+        font-size: 24px;
+    }
+
+    .indicators-card h4 {
+        font-size: 1rem;
+    }
+
+
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %} {% block content %}
+<div class="container">
+
+    <a href="#" class="product-btn btn btn-dark" data-toggle="modal" data-target="#productModal">
+    <span>Product</span>
+</a>
+
+    <!-- Product Modal (New) -->
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Product Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="static/img/shop.png" alt="Product GIF" style="width: 100%; height: auto; border-radius: 8px;">
+                    <p class="mt-3">This GIF showcases the functionality of the AI product. It provides users with real-time assistance and enhances front desk operations with smooth and intuitive AI interactions.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#dashboard" class="dashboard-btn btn btn-dark">
+        <span>Dashboard</span>
+    </a>
+    <h1 style="font-family: forte;font-weight: 500; font-size: 40px; color: rgb(89, 27, 147);">Smart Shopping</h1>
+
+    <!-- Full Width Chart -->
+    <div class="row">
+        <div class="col-12">
+            <div class="chart-container">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row kpi-container">
+        <!-- KPI 1: Daily Transactions -->
+        <div class="col-lg-4 col-md-6 col-6">
+            <div class="kpi">
+                <div class="card-body">
+                    <div class="progress-circle">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" stroke="#e6e6e6" stroke-width="10" fill="none" />
+                            <circle cx="50" cy="50" r="45" stroke="#4db8ff" stroke-width="10" stroke-dasharray="283"
+                                stroke-dashoffset="141.5" fill="none" />
+                        </svg>
+                        <div class="circle-text">1500</div>
+                    </div>
+                    <div class="data-container">
+                        <h6>Transactions</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI 2: Sales Analysis -->
+        <div class="col-6 col-lg-4 col-md-6">
+            <div class="kpi">
+                <div class="card-body">
+                    <div class="progress-circle">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" stroke="#e6e6e6" stroke-width="10" fill="none" />
+                            <circle cx="50" cy="50" r="45" stroke="#ff6f61" stroke-width="10" stroke-dasharray="283"
+                                stroke-dashoffset="70" fill="none" />
+                        </svg>
+                        <div class="circle-text">$20,000</div>
+                    </div>
+                    <div class="data-container">
+                        <h6>Revenue</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add the modal outside the existing container -->
+        <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="data-container" id="categoryModalLabel">Categories</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Grocery</p>
+                        <p>Snacks</p>
+                        <p>Dresses</p>
+                        <p>Beverages</p>
+                        <p>Utensils</p>
+                        <p>Personal Care</p>
+                        <p>Fruits Vegetables</p>
+                        <p>Bakery Items</p>
+                        <p>Stationary</p>
+                        <p>Electronics</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Existing KPI 3: Categories -->
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="kpi clickable-card" data-toggle="modal" data-target="#categoryModal" style="
+        position: relative;
+        background-image: url('static/img/shopping.gif');
+        background-size: cover;
+        background-position: center;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff; /* Adjust text color for better visibility */
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        cursor: pointer;
+        overflow: hidden;
+    ">
+                <div class="card-body text-center" style="
+            position: relative;
+            z-index: 1;
+            padding: 0;
+            margin: 0;
+        ">
+                    <!-- Overlay text -->
+                    <div class="overlay-text position-absolute text-dark"
+                        style="top: 10%; left: 20%; transform: translate(-50%, -50%); font-size: 24px; font-weight: bold;">
+                        Categories
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Categories List -->
+        <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="categoryModalLabel">Categories</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Replace with your categories list -->
+                        <ul class="list-group">
+                            <li class="list-group-item">Category 1</li>
+                            <li class="list-group-item">Category 2</li>
+                            <li class="list-group-item">Category 3</li>
+                            <!-- Add more categories as needed -->
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Charts for Doughnut and Bar -->
+    <div class="row mt-4">
+        <!-- Doughnut Chart -->
+        <div class="col-lg-6 col-md-12 mb-4">
+            <div class="chart-container bg-white shadow-sm rounded p-3">
+                <canvas id="doughnutChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="col-lg-6 col-md-12 mb-4">
+            <div class="chart-container bg-white shadow-sm rounded p-3">
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three KPI Cards: Total Expenses, Total Sales, Balance -->
+    <div class="row indicators-container">
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="indicators-card">
+                <h4></i> Total Expenses</h4>
+                <p>10,000</p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="indicators-card">
+                <h4></i> Total Sales</h4>
+                <p>25,000</p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="indicators-card">
+                <h4></i> Balance</h4>
+                <p>15,000</p>
+            </div>
+        </div>
+    </div>
+
+
+    
+</div>
+
+<script>
+    // Line Chart
+    // Line Chart
+    // Line Chart
+    var ctx = document.getElementById("myChart").getContext("2d");
+    var myChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+            ],
+            datasets: [
+                {
+                    label: "Sales 2024",
+                    data: [12, 19, 3, 5, 2, 3, 9, 10, 14, 12, 14, 20],
+                    borderColor: "rgba(255, 105, 180, 1)", // Bright Pink
+                    backgroundColor: "rgba(255, 105, 180, 0.4)",
+                    borderWidth: 4,
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: "rgba(0, 204, 255, 1)",
+                    pointBorderColor: "#ffffff",
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 4,
+                    pointHoverBackgroundColor: "rgba(0, 204, 255, 1)",
+                    pointHoverBorderColor: "#ffffff",
+                    shadowOffsetX: 6,
+                    shadowOffsetY: 6,
+                    shadowBlur: 12,
+                    shadowColor: "rgba(0, 204, 255, 0.4)",
+                    borderDashOffset: 4,
+                    borderCapStyle: "round",
+                },
+                {
+                    label: "Sales 2023",
+                    data: [10, 17, 1, 3, 2, 1, 7, 8, 12, 10, 12, 18],
+                    borderColor: "rgba(0, 204, 255, 1)", // Bright Cyan
+                    backgroundColor: "rgba(0, 204, 255, 0.4)",
+                    borderWidth: 4,
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: "rgba(255, 105, 180, 1)",
+                    pointBorderColor: "#ffffff",
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 4,
+                    pointHoverBackgroundColor: "rgba(255, 105, 180, 1)",
+                    pointHoverBorderColor: "#ffffff",
+                    shadowOffsetX: 6,
+                    shadowOffsetY: 6,
+                    shadowBlur: 12,
+                    shadowColor: "rgba(255, 105, 180, 0.4)",
+                    borderDashOffset: 4,
+                    borderCapStyle: "round",
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: "#333333",
+                        font: {
+                            size: 14,
+                        },
+                    },
+                    position: "top",
+                    align: "center",
+                    padding: {
+                        bottom: 10,
+                    },
+                },
+                tooltip: {
+                    backgroundColor: "rgba(0, 0, 0, 0.9)",
+                    titleColor: "#ffffff",
+                    bodyColor: "#ffffff",
+                    padding: 12,
+                    cornerRadius: 6,
+                },
+                title: {
+                    display: true,
+                    text: "Monthly Increase",
+                    color: "#333333",
+                    font: {
+                        size: 18,
+                        weight: "bold",
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false,
+                    },
+                    ticks: {
+                        color: "#333333",
+                        font: {
+                            size: 14,
+                        },
+                    },
+                },
+                y: {
+                    grid: {
+                        display: false,
+                    },
+                    ticks: {
+                        color: "#333333",
+                        font: {
+                            size: 14,
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    // Doughnut Chart
+    var ctxDoughnut = document.getElementById("doughnutChart").getContext("2d");
+    var doughnutChart = new Chart(ctxDoughnut, {
+        type: "doughnut",
+        data: {
+            labels: ["Red", "Blue", "Yellow"],
+            datasets: [
+                {
+                    label: "Dataset 1",
+                    data: [10, 20, 30],
+                    backgroundColor: [
+                        "rgba(255, 99, 132, 0.8)", // Bright Red
+                        "rgba(54, 162, 235, 0.8)", // Bright Blue
+                        "rgba(255, 206, 86, 0.8)", // Bright Yellow
+                    ],
+                    borderColor: [
+                        "rgba(255, 99, 132, 1)",
+                        "rgba(54, 162, 235, 1)",
+                        "rgba(255, 206, 86, 1)",
+                    ],
+                    borderWidth: 2,
+                    shadowOffsetX: 6,
+                    shadowOffsetY: 6,
+                    shadowBlur: 12,
+                    shadowColor: "rgba(0, 0, 0, 0.3)",
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: "top",
+                    labels: {
+                        color: "#333333",
+                        font: {
+                            size: 14,
+                        },
+                    },
+                },
+                tooltip: {
+                    backgroundColor: "rgba(0, 0, 0, 0.9)",
+                    titleColor: "#ffffff",
+                    bodyColor: "#ffffff",
+                    padding: 12,
+                    cornerRadius: 6,
+                },
+                title: {
+                    display: true,
+                    text: "Overall Stocks",
+                    color: "#333333",
+                    font: {
+                        size: 18,
+                        weight: "bold",
+                    },
+                },
+            },
+            cutout: "70%",
+        },
+    });
+
+    // Bar Chart
+    var ctxBar = document.getElementById("barChart").getContext("2d");
+    var barChart = new Chart(ctxBar, {
+        type: "bar",
+        data: {
+            labels: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+            ],
+            datasets: [
+                {
+                    label: "Monthly Sales",
+                    data: [15, 25, 10, 30, 20, 25, 30, 10, 30, 20, 25, 30],
+                    backgroundColor: "rgba(255, 165, 0, 0.8)", // Bright Orange
+                    borderColor: "rgba(255, 165, 0, 1)",
+                    borderWidth: 2,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.9,
+                    borderRadius: 10,
+                    shadowOffsetX: 6,
+                    shadowOffsetY: 6,
+                    shadowBlur: 12,
+                    shadowColor: "rgba(0, 0, 0, 0.3)",
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: "top",
+                    labels: {
+                        color: "#333333",
+                        font: {
+                            size: 14,
+                        },
+                    },
+                },
+                tooltip: {
+                    backgroundColor: "rgba(0, 0, 0, 0.9)",
+                    titleColor: "#ffffff",
+                    bodyColor: "#ffffff",
+                    padding: 12,
+                    cornerRadius: 6,
+                },
+                title: {
+                    display: true,
+                    text: "Sales Statistics",
+                    color: "#333333",
+                    font: {
+                        size: 18,
+                        weight: "bold",
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false,
+                    },
+                    ticks: {
+                        color: "#333333",
+                        font: {
+                            size: 14,
+                        },
+                    },
+                },
+                y: {
+                    grid: {
+                        display: false,
+                    },
+                    ticks: {
+                        color: "#333333",
+                        font: {
+                            size: 14,
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    function toggleCategory() {
+        var container = document.getElementById("categoryContainer");
+        if (container.style.display === "none" || container.style.display === "") {
+            container.style.display = "block";
+        } else {
+            container.style.display = "none";
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}

@@ -1,0 +1,625 @@
+{% extends "sidebar.html" %}
+
+{% block head %}
+{{ super() }}
+<!-- Include Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<link rel="stylesheet" rel href="static/css/productbtn.css" rel="stylesheet">
+<link rel="stylesheet" rel href="static/css/dashboardbtn.css" rel="stylesheet">
+
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        margin: 100;
+        padding: 0;
+        background-color: rgba(205, 243, 251, 0.6);
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        position: relative;
+    }
+
+    .kpi-card {
+        background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%);
+        border-radius: 12px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .kpi-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .kpi-card .card-body {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .kpi-card h5 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+        text-align: justify;
+    }
+
+    .kpi-card p {
+        font-size: 1.75rem;
+        font-weight: bold;
+        color: #007bff;
+        margin: 0;
+        text-align: justify;
+    }
+
+    .kpi-card i {
+        font-size: 10rem;
+        position: absolute;
+        right: -60px;
+        bottom: -23px;
+        opacity: 0.4;
+        color: rgba(67, 191, 216, 0.6);
+        z-index: 1;
+        transition: transform 0.3s ease;
+    }
+
+    .kpi-card:hover i {
+        animation: dance 0.5s infinite alternate;
+        color: #007bff;
+    }
+
+    @keyframes dance {
+        0% {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-10px) rotate(-10deg);
+        }
+
+        100% {
+            transform: translateY(0) rotate(10deg);
+        }
+    }
+
+    .graph-card {
+        background: linear-gradient(135deg, #ffffff 0%, #d8ecfa 100%);
+        border-radius: 8px;
+        padding: .25rem;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .graph-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+
+    canvas {
+        width: 100% !important;
+        height: 300px !important;
+    }
+
+
+
+
+    @keyframes sh0 {
+        0% {
+            transform: rotate(0deg) translate3d(0, 0, 0);
+        }
+
+        25% {
+            transform: rotate(7deg) translate3d(0, 0, 0);
+        }
+
+        50% {
+            transform: rotate(-7deg) translate3d(0, 0, 0);
+        }
+
+        75% {
+            transform: rotate(1deg) translate3d(0, 0, 0);
+        }
+
+        100% {
+            transform: rotate(0deg) translate3d(0, 0, 0);
+        }
+    }
+
+    /* Heading Styling */
+    .heading-title {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: 2.5rem;
+        color: rgba(21, 151, 177, 0.6);
+    }
+
+    .heading-tagline {
+        font-family: 'Oxanium', sans-serif;
+        font-size: 2.5rem;
+        font-weight: normal;
+        color: #000000;
+    }
+
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .rotate-img {
+        animation: rotate 2s ease-in-out 1;
+    }
+
+    /* Adjustments for Small Screens */
+    @media (max-width: 576px) {
+          h1 {
+        font-size: 1.8rem; /* Reduce font size */
+        margin: 15px 0;
+        }
+
+        .kpi-card {
+            margin-bottom: 15px;
+            width: 110%;
+            margin-right: 10px;
+        }
+
+        .kpi-card i {
+            font-size: 6rem;
+            right: -30px;
+            bottom: -10px;
+        }
+
+        .graph-card {
+            margin-bottom: 15px;
+            width: 110%;
+        }
+
+        canvas {
+            height: 200px !important;
+        }
+
+        .smartcam-container{
+        margin-left: 15px;
+        }
+    }
+
+    /* Adjustments for Medium Screens */
+    @media (min-width: 576px) and (max-width: 768px) {
+
+    h1 {
+        font-size: 2.2rem; /* Increase font size compared to mobile */
+        margin: 18px 0;
+        }
+
+
+        .kpi-card i {
+            font-size: 8rem;
+            right: -45px;
+            bottom: -15px;
+        }
+
+        canvas {
+            height: 250px !important;
+        }
+    }
+
+    /* Adjustments for Large Screens */
+    @media (min-width: 992px) {
+
+         h1 {
+        font-size: 2.5rem; /* Larger size for desktop */
+        margin: 20px 0;
+        }
+
+
+        .kpi-card i {
+            font-size: 10rem;
+            right: -60px;
+            bottom: -23px;
+        }
+
+        canvas {
+            height: 300px !important;
+        }
+    }
+
+    /* Adjustments for Extra Large Screens */
+    @media (min-width: 1400px) {
+        .heading-title {
+            font-size: 3rem;
+        }
+
+        .heading-tagline {
+            font-size: 3rem;
+        }
+
+
+
+        .kpi-card i {
+            font-size: 12rem;
+            right: -75px;
+            bottom: -30px;
+        }
+
+        canvas {
+            height: 350px !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="smartcam-container">
+
+        <a href="#" class="product-btn btn btn-dark" data-toggle="modal" data-target="#productModal">
+    <span>Product</span>
+</a>
+
+    <!-- Product Modal (New) -->
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Product Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="static/img/cam.png" alt="Product GIF" style="width: 100%; height: auto; border-radius: 8px;">
+                    <p class="mt-3">This GIF showcases the functionality of the AI product. It provides users with real-time assistance and enhances front desk operations with smooth and intuitive AI interactions.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#dashboard" class="dashboard-btn btn btn-dark">
+        <span>Dashboard</span>
+    </a>
+
+    <h1 style="display: flex; align-items: center; gap: 0;">
+        <span style="font-family: 'Oxanium', sans-serif; color: #000000;">Door</span>
+        <img src="static/img/c.png" alt="C" class="rotate-img"
+            style="height: 1.5em; vertical-align: middle; margin: 0; padding: 0;">
+        <span style="font-family: 'Oxanium', sans-serif; color: #000000;">am</span>
+    </h1>
+
+        <!-- KPI Cards -->
+        <div class=" mt-4">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card kpi-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Employees</h5>
+                            <p class="card-text" id="total-employees">0</p>
+                            <i class="bx bx-user"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class=" col-sm-6 col-md-4 col-lg-3">
+                    <div class="card kpi-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Present</h5>
+                            <p class="card-text" id="present-employees">0</p>
+                            <i class="bx bx-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class=" col-sm-6 col-md-4 col-lg-3">
+                    <div class="card kpi-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Delay</h5>
+                            <p class="card-text" id="delayed-employees">0</p>
+                            <i class="bx bx-time-five"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class=" col-sm-6 col-md-4 col-lg-3">
+                    <div class="card kpi-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Absent</h5>
+                            <p class="card-text" id="absent-employees">0</p>
+                            <i class="bx bx-x-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- Graphs -->
+        <div class="row graph-container">
+            <div class="col-md-6 col-lg-4">
+                <div class="card graph-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Monthly Report</h5>
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-8">
+                <div class="card graph-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Daily report</h5>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card graph-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Yearly Status</h5>
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    <script>
+        // Doughnut Chart with 3D effect
+        var ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+
+        // Create a gradient for the 3D effect
+        var gradient = ctxDoughnut.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, '#ff6384');
+        gradient.addColorStop(1, '#ff9f40');
+
+        new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: ['Label 1', 'Label 2', 'Label 3'],
+                datasets: [{
+                    data: [10, 20, 30],
+                    backgroundColor: [gradient, '#36a2eb', '#cc65fe'],
+                    borderColor: '#ccc',
+                    borderWidth: 3, // Thicker border for 3D effect
+                    hoverBorderColor: '#000', // Darker border on hover for 3D feel
+                    hoverBorderWidth: 2
+                }]
+            },
+            options: {
+                maintainAspectRatio: false, // Allow canvas to scale with container
+                responsive: true,
+                plugins: {
+                    datalabels: {
+                        display: false
+                    },
+                    doughnutlabel: {
+                        labels: [{
+                            text: 'Doughnut Chart',
+                            font: {
+                                size: 20,
+                                weight: 'bold'
+                            }
+                        }]
+                    }
+                },
+                elements: {
+                    arc: {
+                        borderWidth: 3,
+                        hoverOffset: 10 // Adds depth on hover
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuad',
+                    loop: false
+                }
+            }
+        });
+
+
+        // Bar Chart with 3D effect
+        var ctxBar = document.getElementById('barChart').getContext('2d');
+
+        // Create a gradient for the 3D effect
+        var barGradient = ctxBar.createLinearGradient(0, 0, 0, 400);
+        barGradient.addColorStop(0, '#42a5f5');
+        barGradient.addColorStop(1, '#1e88e5');
+
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['Label 1', 'Label 2', 'Label 3'],
+                datasets: [{
+                    label: 'Dataset 1',
+                    data: [10, 20, 30],
+                    backgroundColor: barGradient,
+                    borderWidth: 0.1, // Thicker border for 3D effect
+                    borderRadius: 10,
+                    barThickness: 15, // Thicker bars
+                    borderSkipped: false,
+                    hoverBackgroundColor: '#1e88e5', // Darker color on hover for 3D feel
+                    hoverBorderColor: '#000',
+                    hoverBorderWidth: 2 // Thicker border on hover
+                }]
+            },
+            options: {
+                maintainAspectRatio: false, // Allow canvas to scale with container
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            font: {
+                                size: 14 // Font size for the legend labels
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false // Hide grid lines for x-axis
+                        },
+                        ticks: {
+                            font: {
+                                size: 12 // Font size for x-axis labels
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false // Hide grid lines for y-axis
+                        },
+                        ticks: {
+                            font: {
+                                size: 12 // Font size for y-axis labels
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuad',
+                    loop: false
+                }
+            }
+        });
+
+// Line Chart with 3D effect
+var ctxLine = document.getElementById('lineChart').getContext('2d');
+
+// Create gradients for the 3D effect
+var lineGradient1 = ctxLine.createLinearGradient(0, 0, 0, 400);
+lineGradient1.addColorStop(0, 'rgba(0, 204, 255, 0.8)'); // Light blue
+lineGradient1.addColorStop(1, 'rgba(0, 204, 255, 0.2)');
+
+var lineGradient2 = ctxLine.createLinearGradient(0, 0, 0, 400);
+lineGradient2.addColorStop(0, 'rgba(255, 123, 67, 0.8)'); // Warm orange
+lineGradient2.addColorStop(1, 'rgba(255, 123, 67, 0.2)');
+
+new Chart(ctxLine, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+            label: 'Curve 1',
+            borderColor: '#ff8c00', // Deep orange
+            backgroundColor: lineGradient2,
+            data: [65, 59, 80, 81, 56, 60],
+            fill: false,
+            tension: 0.2,
+            borderWidth: 3, // Thicker line for 3D effect
+            pointStyle: 'circle', // Circular points for a smooth 3D feel
+            pointBorderColor: '#ff8c00', // Darker border for points
+            pointBackgroundColor: '#ffffff', // White points for contrast
+            hoverBorderWidth: 3,
+            pointRadius: 6 // Larger points for better visibility
+        }, {
+            label: 'Curve 2',
+            borderColor: '#00bfff', // Bright blue
+            backgroundColor: lineGradient1,
+            data: [28, 48, 40, 19, 86, 30],
+            fill: true,
+            tension: .3,
+            borderWidth: 3,
+            pointStyle: 'circle',
+            pointBorderColor: '#00bfff',
+            pointBackgroundColor: '#ffffff',
+            hoverBorderWidth: 3,
+            pointRadius: 6
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                labels: {
+                    font: {
+                        size: 14 // Font size for the legend labels
+                    }
+                }
+            },
+            tooltip: {
+                bodyFont: {
+                    size: 12 // Font size for tooltips body
+                },
+                titleFont: {
+                    size: 12 // Font size for tooltip titles
+                },
+                callbacks: {
+                    label: function(tooltipItem) {
+                        return tooltipItem.dataset.label + ': ' + tooltipItem.formattedValue;
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    font: {
+                        size: 12 // Font size for x-axis labels
+                    }
+                },
+                grid: {
+                    display: false // Hide grid lines for x-axis
+                }
+            },
+            y: {
+                ticks: {
+                    font: {
+                        size: 12 // Font size for y-axis labels
+                    }
+                },
+                grid: {
+                    display: false // Hide grid lines for y-axis
+                }
+            }
+        },
+        animation: {
+            duration: 2000,
+            easing: 'easeInOutQuad',
+            loop: false
+        }
+    }
+});
+
+
+
+
+
+
+        // Sample data, this could come from an API, database, etc.
+        const kpiData = {
+            total: 100,
+            present: 80,
+            delay: 10,
+            absent: 10
+        };
+
+        // Function to update the KPIs
+        function updateKPIs() {
+            document.getElementById('total-employees').textContent = kpiData.total;
+            document.getElementById('present-employees').textContent = kpiData.present;
+            document.getElementById('delayed-employees').textContent = kpiData.delay;
+            document.getElementById('absent-employees').textContent = kpiData.absent;
+        }
+
+        // Call the function to update the KPIs
+        updateKPIs();
+
+    </script>
+    {% endblock %}

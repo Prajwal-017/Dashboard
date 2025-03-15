@@ -1,0 +1,488 @@
+{% extends "sidebar.html" %}
+
+{% block head %}
+{{ super() }}
+<title>Personal Assistant - KPIs</title>
+<!-- Include Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" rel href="static/css/productbtn.css" rel="stylesheet">
+<link rel="stylesheet" rel href="static/css/dashboardbtn.css" rel="stylesheet">
+
+
+<style>
+    /* General Body Styling */
+    body {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        background-color: rgba(205, 243, 251, 0.6);
+    }
+
+    /* KPI Card Styling */
+    .kpi-card {
+        background: rgb(255, 255, 255);
+        border-radius: 8px;
+        padding: 1rem;
+        color: #000000;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        height: 200px;
+        cursor: pointer;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .kpi-card h2 {
+        font-size: 2rem;
+        margin: 0;
+    }
+
+    .kpi-card p {
+        margin: 0;
+    }
+
+    /* Specific Background Images for KPIs */
+    #kpi-weather {
+        background-image: url('static/img/cloudy.gif');
+        background-size: 60%;
+        background-position: bottom;
+    }
+
+    #kpi-tara {
+        background-image: url('static/img/chatbot.gif');
+        background-size: 60%;
+        background-position: center;
+    }
+
+    #kpi-living-area {
+        background-image: url('static/img/living-room.gif');
+        background-size: 60%;
+        background-position: bottom;
+    }
+
+    #kpi-bed-room {
+        background-image: url('static/img/robot.gif');
+        background-size: 60%;
+        background-position: bottom;
+    }
+
+    #kpi-kitchen {
+        background-image: url('static/img/KitchenRobot.gif');
+        background-size: 60%;
+        background-position: bottom;
+    }
+
+    #kpi-graph {
+        background-image: url('static/img/graph.gif');
+        background-size: 140%;
+        background-position: center;
+    }
+
+    /* Camera Card Styling */
+    .camera-card {
+        background: rgba(255, 255, 255, 0.553);
+        border-radius: 8px;
+        padding: .5rem;
+        box-shadow: 0px 0px 55px rgba(31, 31, 31, 0.553);
+        text-align: center;
+        height: 420px;
+    }
+
+    .camera-card video {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+    }
+
+    /* Modal and Blur Effect */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1050;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.6);
+        transition: opacity 0.3s ease;
+        align-self: center;
+    }
+
+    .modal-content {
+        background-color: rgba(205, 243, 251, 0.852);
+        margin: 15px auto;
+        padding: 10px;
+        border-radius: 8px;
+        width: 70%;
+        max-width: 800px;
+        transition: opacity 0.8s ease;
+    }
+
+    .modal-content canvas {
+        width: 100%;
+        height: 600px;
+    }
+
+
+    @keyframes sh0 {
+        0% {
+            transform: rotate(0deg) translate3d(0, 0, 0);
+        }
+
+        25% {
+            transform: rotate(7deg) translate3d(0, 0, 0);
+        }
+
+        50% {
+            transform: rotate(-7deg) translate3d(0, 0, 0);
+        }
+
+        75% {
+            transform: rotate(1deg) translate3d(0, 0, 0);
+        }
+
+        100% {
+            transform: rotate(0deg) translate3d(0, 0, 0);
+        }
+    }
+
+
+    /* Media Queries */
+
+    /* For devices with a max width of 992px (Tablets and small desktops) */
+    @media (max-width: 992px) {
+        h1 {
+            font-size: 2.5rem;
+            margin: 20px 0;
+        }
+
+        .camera-card {
+            height: 300px;
+        }
+
+        .kpi-card {
+            height: 150px;
+        }
+
+        .modal-content {
+            width: 90%;
+        }
+    }
+
+    /* For devices with a max width of 768px (Tablets and large phones) */
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2.2rem;
+            margin: 18px 0;
+        }
+
+        .camera-card {
+            height: 350px;
+        }
+
+        .kpi-card {
+            height: 180px;
+        }
+
+        .modal-content {
+            width: 95%;
+        }
+    }
+
+    /* For devices with a max width of 576px (Small phones) */
+    @media (max-width: 576px) {
+        h1 {
+            font-size: 1.8rem;
+            margin: 15px 0;
+        }
+
+        .personal-container {
+            margin-left: 10px;
+        }
+
+        .camera-card {
+            height: 250px;
+            width: 110%;
+        }
+
+        .kpi-card {
+            height: 150px;
+            width: 120%;
+        }
+
+        .modal-content {
+            width: 100%;
+        }
+
+        .kpi-card h2 {
+            font-size: 1.5rem;
+        }
+
+        .camera-card video {
+            height: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="personal-container">
+
+    <a href="#" class="product-btn btn btn-dark" data-toggle="modal" data-target="#productModal">
+    <span>Product</span>
+</a>
+
+    <!-- Product Modal (New) -->
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Product Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="static/img/frondesk.gif" alt="Product GIF" style="width: 100%; height: auto; border-radius: 8px;">
+                    <p class="mt-3">This GIF showcases the functionality of the AI product. It provides users with real-time assistance and enhances front desk operations with smooth and intuitive AI interactions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="#dashboard" class="dashboard-btn btn btn-dark">
+        <span>Dashboard</span>
+    </a>
+    <h1 style="display: flex; align-items: center; gap: 0;">
+        <img src="static/img/p.png" alt="C" class="rotate-img"
+            style="height: 1.5em; vertical-align: middle; margin: 0; padding: 0;">
+        <span style="font-family: 'Oxanium', sans-serif; color: #000000;">ersonal</span>
+        <span style="font-family: 'Oxanium', sans-serif; color: #0a23a1;">Assistant</span>
+    </h1>
+
+    <!-- KPI Section -->
+    <div class="row mb-8">
+        <!-- Camera Streaming Section (First on smaller screens) -->
+        <div class="col-md-4 order-md-1 order-sm-1  mb-3">
+            <div class="camera-card">
+                <video id="webcam" autoplay></video>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-4 mb-3 col-6">
+                    <div class="kpi-card" id="kpi-weather">
+                        <h2>Cloudy</h2>
+                        <p>Weather</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 col-6">
+                    <div class="kpi-card" id="kpi-tara" data-toggle="modal" data-target="#taraModal">
+
+                        <div class="overlay-text position-absolute text-dark"
+                            style="top: 10%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; font-weight: bold;">
+                            About!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal for Tara-Personal Assistant KPI -->
+                <div class="modal fade" id="taraModal" tabindex="-1" role="dialog" aria-labelledby="taraModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="taraModalLabel">Tara - Personal Assistant</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                            <img src="static/img/chatbot.gif" alt="Graph GIF" style="width: 100%; height: auto; border-radius: 8px;">
+
+                                <p>This section provides detailed information about Tara, your personal assistant. Tara
+                                    helps you with various tasks and streamlines your day-to-day activities.</p>
+                                <!-- You can add more information about Tara's features and functionalities here -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 col-6">
+                    <div class="kpi-card" id="kpi-living-area">
+                        <h2>ON</h2>
+                        <p>Living Area</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 col-6">
+                    <div class="kpi-card" id="kpi-bed-room">
+                        <h2>OFF</h2>
+                        <p>Bed Room</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 col-6">
+                    <div class="kpi-card" id="kpi-kitchen">
+                        <h2>ON</h2>
+                        <p>Kitchen</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 col-6">
+                    <div class="kpi-card" id="kpi-graph">
+                        <p>Click to view graph</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Graph -->
+<div id="graphModal" class="modal">
+    <div class="modal-content">
+        <h5>Heading</h5>
+        <canvas id="curveChart"></canvas>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Access and display webcam stream
+    async function initWebcam() {
+        const video = document.getElementById('webcam');
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+        } catch (error) {
+            console.error('Error accessing webcam:', error);
+        }
+    }
+
+    // Initialize webcam
+    initWebcam();
+
+    // Function to display the modal with graph
+    document.getElementById('kpi-graph').addEventListener('click', function () {
+        document.getElementById('graphModal').style.display = 'block';
+        const ctx = document.getElementById('curveChart').getContext('2d');
+
+        // Smooth Curve Graph
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [
+                    {
+                        label: 'Dataset Neon Pink',
+                        data: [35, 45, 60, 40, 70, 65],
+                        fill: true,
+                        backgroundColor: createGradient(ctx, 'rgba(255, 20, 147, 0.2)', 'rgba(255, 105, 180, 0.1)'), // Gradient background
+                        borderColor: 'rgba(255, 20, 147, 1)', // Neon pink
+                        tension: 0.3,
+                        borderWidth: 4,
+                        shadowOffsetX: 6,
+                        shadowOffsetY: 6,
+                        shadowBlur: 15,
+                        shadowColor: 'rgba(255, 20, 147, 0.7)',
+                        pointBackgroundColor: '#FF1493',
+                        pointHoverRadius: 10,
+                        pointHoverBorderWidth: 5,
+                        pointHoverBorderColor: 'rgba(255, 255, 255, 0.8)' // Glow effect
+                    },
+                    {
+                        label: 'Dataset Electric Blue',
+                        data: [50, 60, 55, 65, 55, 50],
+                        fill: false,
+                        borderColor: 'rgba(0, 191, 255, 1)', // Electric blue
+                        tension: 0.4,
+                        borderWidth: 4,
+                        shadowOffsetX: 6,
+                        shadowOffsetY: 6,
+                        shadowBlur: 15,
+                        shadowColor: 'rgba(0, 191, 255, 0.7)',
+                        pointBackgroundColor: '#00BFFF',
+                        pointHoverRadius: 10,
+                        pointHoverBorderWidth: 5,
+                        pointHoverBorderColor: 'rgba(255, 255, 255, 0.8)' // Glow effect
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                animation: {
+                    duration: 1200, // Fast-paced animation
+                    easing: 'easeInOutQuad' // Faster easing for dynamic movement
+                },
+                plugins: {
+                    tooltip: {
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: 'rgba(255, 255, 255, 0.2)',
+                        borderWidth: 1,
+                        backgroundColor: 'rgba(30, 30, 30, 0.9)', // Dark tooltip background
+                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.5)', // Deeper shadow
+                        cornerRadius: 12,
+                        padding: 12,
+                        caretSize: 10,
+                        caretPadding: 8,
+                        displayColors: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true, // Start the y-axis at 0
+                        grid: {
+                            color: 'rgba(0, 255, 0, 0.1)' // Neon green grid
+                        },
+                        ticks: {
+                            color: '#FF', // Neon green ticks
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0, 255, 0, 0.1)' // Neon green grid for x-axis
+                        },
+                        ticks: {
+                            color: '#FF', // Neon green ticks
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Function to create gradient color for line chart
+        function createGradient(ctx, startColor, endColor) {
+            var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, startColor);
+            gradient.addColorStop(1, endColor);
+            return gradient;
+        }
+
+
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function (event) {
+        if (event.target == document.getElementById('graphModal')) {
+            document.getElementById('graphModal').style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

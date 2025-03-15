@@ -1,0 +1,457 @@
+{% extends "sidebar.html" %}
+
+{% block head %}
+{{ super() }}
+<title>Front Desk System</title>
+<!-- Include Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" rel href="static/css/productbtn.css" rel="stylesheet">
+<link rel="stylesheet" rel href="static/css/dashboardbtn.css" rel="stylesheet">
+
+<style>
+   /* Global Styles */
+body {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    transition: background-color 0.3s ease;
+    background-color: rgba(205, 243, 251, 0.6);
+
+
+}
+
+
+/* KPI Card */
+.kpi-card {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 0.8rem;
+    color: #ffffff;
+    box-shadow: 0px 0px 10px rgba(42, 41, 41, 0.815);
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kpi-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 20px rgba(42, 41, 41, 0.815);
+}
+
+.kpi-card h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    text-align: end;
+    color: #000000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.kpi-card p {
+    font-size: 1.7rem;
+    margin: 0;
+    text-align: end;
+    color: rgb(67, 191, 216);
+    font-weight: 700;
+}
+
+.kpi-card i {
+    font-size: 6rem;
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    opacity: 0.7;
+    z-index: -1;
+    color: rgba(67, 191, 216, 0.6);
+}
+
+/* Graph Card */
+.graph-card {
+    background: rgba(232, 237, 237, 0.3);
+    border-radius: 8px;
+    padding: 0.25rem;
+    box-shadow: 0px 0px 15px rgba(42, 41, 41, 0.815);
+    height: 100%;
+}
+
+.graph-card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+canvas {
+    width: 100% !important;
+    height: 400px !important;
+}
+
+/* Modal Pop-up Styling */
+.modal-dialog {
+    max-width: 500px;
+    margin: 1.75rem auto;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: #444;
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.modal-title {
+    text-align: center;
+}
+
+/* Keyframe Animation */
+@keyframes sh0 {
+    0% {
+        transform: rotate(0deg) translate3d(0, 0, 0);
+    }
+    25% {
+        transform: rotate(7deg) translate3d(0, 0, 0);
+    }
+    50% {
+        transform: rotate(-7deg) translate3d(0, 0, 0);
+    }
+    75% {
+        transform: rotate(1deg) translate3d(0, 0, 0);
+    }
+    100% {
+        transform: rotate(0deg) translate3d(0, 0, 0);
+    }
+}
+
+
+
+
+
+@media (max-width: 576px) {
+    h1 {
+        font-size: 1.8rem;
+        margin: 15px 0;
+    }
+
+    .kpi-card {
+        padding: 0.9rem;
+        font-size: 0.75rem;
+    }
+
+    .kpi-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .kpi-card p {
+        font-size: 2.5rem;
+    }
+
+    .graph-card {
+        padding: 0.3rem;
+    }
+
+    canvas {
+        height: 375px !important;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    h1 {
+        font-size: 2.2rem;
+        margin: 18px 0;
+    }
+
+    .kpi-card {
+        padding: 0.9rem;
+        font-size: 0.75rem;
+    }
+
+    .kpi-card h3 {
+        font-size: 1.35rem;
+    }
+
+    .kpi-card p {
+        font-size: 1.5rem;
+    }
+
+    .graph-card {
+        padding: 0.45rem;
+    }
+
+    canvas {
+        height: 412px !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    h1 {
+        font-size: 2.5rem;
+        margin: 20px 0;
+    }
+
+    .kpi-card {
+        padding: 1.05rem;
+        font-size: 1.35rem;
+    }
+
+    .kpi-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .kpi-card p {
+        font-size: 1.8rem;
+    }
+
+    .graph-card {
+        padding: 0.6rem;
+    }
+
+    canvas {
+        height: 450px !important;
+    }
+}
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <a href="#" class="product-btn btn btn-dark" data-toggle="modal" data-target="#productModal">
+    <span>Product</span>
+</a>
+
+<!-- Product Modal (New) -->
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Product Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="static/img/frondesk.gif" alt="Product GIF" style="width: 100%; height: auto; border-radius: 8px;">
+                    <p class="mt-3">This GIF showcases the functionality of the AI product. It provides users with real-time assistance and enhances front desk operations with smooth and intuitive AI interactions.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="#dashboard" class="dashboard-btn btn btn-dark">
+        <span>Dashboard</span>
+    </a>
+
+    <h1 class="text-left">
+        <span style="color: rgb(0, 188, 188);" class="heading-title">FrontDesk</span>
+        <span class="heading-tagline">AI</span>
+    </h1>
+
+    <!-- KPIs Section -->
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-3">
+
+            <div class="kpi-card">
+                <h3><i class="fas fa-users"></i> Today's Visitors</h3>
+                <p>665</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+
+            <div class="kpi-card">
+                <h3><i class="fas fa-question-circle"></i> Today's Questions</h3>
+                <p>250</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="kpi-card">
+                <h3><i class="fas fa-comments"></i> Total Responses</h3>
+                <p>450</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="kpi-card">
+                <h3><i class="fas fa-user-check"></i> Total Visitors</h3>
+                <p>950</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphs Section -->
+    <div class="row">
+        <div class="col-md-6 col-md-6 col-lg-5 mb-3">
+            <div class="graph-card">
+                <a href="#gifModal" data-toggle="modal" class="gif-link">
+                    <img id="frGifontdesk" src="static/img/frontdesk.gif" alt="Graph GIF"
+                        style="width: 100%; height: 100%; border-radius: 8px;">
+
+                    <!-- Overlay text -->
+                    <div class="overlay-text position-absolute text-dark"
+                        style="top: 10%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; font-weight: bold;">
+                        About
+                    </div>
+                </a>
+
+                <!-- Bootstrap Modal for Description -->
+                <div class="modal fade" id="gifModal" tabindex="-1" role="dialog" aria-labelledby="gifModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="gifModalLabel">FrontDesk AI</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="static/img/frontdesk.gif" alt="Graph GIF"
+                                    style="width: 80%; height: auto; border-radius: 8px;">
+                                <p  class="mt-3" >FrontDesk AI offers detailed support for organizations, answering user queries effectively. It uses advanced facial recognition for secure access and personalized interactions. The interface allows easy data training to improve system accuracy. The system is mobile, providing assistance where needed. Administrators can manage and troubleshoot remotely. User data is securely stored, adhering to strict privacy standards. Inquiries are directed to administrators for prompt responses via email.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="col-md-6 col-lg-7">
+            <div class="graph-card">
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // JavaScript for Chart and GIF Replacement
+
+    // Line Chart with Smooth Transitions, Effects, and Title
+    var ctxLine = document.getElementById('lineChart').getContext('2d');
+    var lineChart = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Visits',
+                data: [5, 8, 10, 12, 15, 18, 22, 17, 20, 18, 22, 17],
+                backgroundColor: gradient(ctxLine), // Add gradient color
+                borderColor: '#FFCE56',
+                borderWidth: 4,
+                hoverBackgroundColor: '#FFECB3',
+                hoverBorderColor: '#FFA000',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 3, // Larger points
+                pointHoverRadius: 6,
+                pointBackgroundColor: '#FFCE56',
+                pointBorderColor: '#FFA000',
+                pointHoverBackgroundColor: '#FFA000',
+                pointHoverBorderColor: '#FFECB3',
+                shadowOffsetX: 3, // Add shadow effect
+                shadowOffsetY: 3,
+                shadowColor: 'rgba(0, 0, 0, 0.3)',
+                shadowBlur: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 1500, // Enhanced animation duration
+                easing: 'easeInOutQuad'
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Monthly Visits Overview',
+                    color: '#000000',
+                    font: {
+                        size: 20, // Larger font size for title
+                        weight: 'bold'
+                    },
+                    padding: {
+                        top: 10,
+                        bottom: 30
+                    }
+                },
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    borderColor: '#FFCE56',
+                    borderWidth: 2, // Thicker border
+                    cornerRadius: 10,
+                    displayColors: false,
+                    padding: 10,
+                    caretSize: 8,
+                    caretPadding: 10,
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darker background for tooltip
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' // Add shadow to tooltip
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#444',
+                        font: {
+                            size: 12 // Slightly larger font size for y-axis labels
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#444',
+                        font: {
+                            size: 12 // Slightly larger font size for x-axis labels
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Function to create a gradient
+    function gradient(ctx) {
+        var gradientFill = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientFill.addColorStop(0, 'rgba(255, 206, 86, 0.6)');
+        gradientFill.addColorStop(1, 'rgba(255, 206, 86, 0)');
+        return gradientFill;
+    }
+
+</script>
+
+{% endblock %}

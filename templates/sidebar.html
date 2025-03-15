@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-ML</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Boxicons -->
+  <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="static/css/sidebar.css">
+  <link rel="stylesheet" href="static/css/style.css">
+
+</head>
+{% endblock %}
+
+<body>
+  <div class="container-fluid d-flex">
+    <div class="row flex-nowrap w-100">
+      <!-- Loader -->
+<div id="loader-wrapper">
+  <div id="loader"></div>
+</div>
+
+
+
+      <!-- Sidebar -->
+      <aside class="sidebar col-auto" >
+        <div class="sidebar-top">
+          <span class="shrink-btn">
+            <i class='bx bx-chevron-left'></i>
+          </span>
+          <img src="static/img/logo.gif" class="logo img-fluid" alt="Logo">
+          <h3 class="hide">
+            <a href="/" style="text-decoration: none; color: inherit;">AI-ML</a>
+          </h3>
+        </div>
+        <div class="sidebar-links">
+          <ul class="list-unstyled">
+            <!-- Grouped Links -->
+            <li>
+              <a href="FrontDesk" class="{% if request.path == '/FrontDesk' %}active{% endif %} d-flex align-items-center" data-toggle="tooltip" data-placement="right" title="Front Desk Assistant">
+                <div class="icon">
+                  <i class='bx bx-bot'></i>
+                  <i class='bx bxs-bot'></i>
+                </div>
+                <span class="link hide ml-2">Front Desk Assistant</span>
+              </a>
+            </li>
+            <li>
+              <a href="PersonalAssistant" class="{% if request.path == '/PersonalAssistant' %}active{% endif %} d-flex align-items-center" data-toggle="tooltip" data-placement="right" title="Personal Assistant">
+                <div class="icon">
+                  <i class='bx bx-user-voice'></i>
+                  <i class='bx bxs-user-voice'></i>
+                </div>
+                <span class="link hide ml-2">Personal Assistant</span>
+              </a>
+            </li>
+            <li>
+              <a href="Health" class="{% if request.path == '/Health' %}active{% endif %} d-flex align-items-center" data-toggle="tooltip" data-placement="right" title="Health Prediction">
+                <div class="icon">
+                  <i class='bx bx-heart'></i>
+                  <i class='bx bxs-heart'></i>
+                </div>
+                <span class="link hide ml-2">Health Prediction</span>
+              </a>
+            </li>
+            <li>
+              <a href="SuperRobotArm" class="{% if request.path == '/SuperRobotArm' %}active{% endif %} d-flex align-items-center" data-toggle="tooltip" data-placement="right" title="Super Robot Arm">
+                <div class="icon">
+                  <i class='bx bx-bar-chart-square'></i>
+                  <i class='bx bxs-bar-chart-square'></i>
+                </div>
+                <span class="link hide ml-2">Super Robot Arm</span>
+              </a>
+            </li>
+            <li>
+              <a href="AIFarming" class="{% if request.path == '/AIFarming' %}active{% endif %} d-flex align-items-center" data-toggle="tooltip" data-placement="right" title="Smart AI Farming">
+                <div class="icon">
+                  <i class='bx bx-brain'></i>
+                  <i class='bx bxs-brain'></i>
+                </div>
+                <span class="link hide ml-2">Smart AI Farming</span>
+              </a>
+            </li>
+            <li>
+              <a href="LaneDetection" class="{% if request.path == '/LaneDetection' %}active{% endif %} d-flex align-items-center" data-toggle="tooltip" data-placement="right" title="Smart Lane Detection">
+                <div class="icon">
+                  <i class='bx bx-car'></i>
+                  <i class='bx bxs-car'></i>
+                </div>
+                <span class="link hide ml-2">Smart Lane Detection</span>
+              </a>
+            </li>
+            <!-- New Projects -->
+            <li>
+              <a href="DoorCam" class="{% if request.path == '/DoorCam' %}active{% endif %} d-flex align-items-center" data-toggle="tooltip" data-placement="right" title="Smart Door Cam">
+                <div class="icon">
+                  <i class='bx bx-camera-home'></i>
+                  <i class='bx bxs-camera-home'></i>
+                </div>
+                <span class="link hide ml-2">Smart Door Cam</span>
+              </a>
+            </li>
+            <li>
+              <a href="SmartShopping" class="{% if request.path == '/SmartShopping' %}active{% endif %} d-flex align-items-center" data-toggle="tooltip" data-placement="right" title="Smart Shopping">
+                <div class="icon">
+                  <i class='bx bx-cart'></i>
+                  <i class='bx bxs-cart'></i>
+                </div>
+                <span class="link hide ml-2">Smart Shopping</span>
+              </a>
+            </li>
+
+            <hr class="my-4"> <!-- Separator Line -->
+
+<li>
+  <a href="roadmap" class="{% if request.path == '/roadmap' %}active{% endif %} d-flex align-items-center" data-toggle="tooltip" data-placement="right" title="Road Map">
+    <div class="icon">
+      <i class='bx bx-map' ></i>
+      <i class='bx bxs-map'></i>
+    </div>
+    <span class="link hide ml-2">Road Map</span>
+  </a>
+</li>
+          </ul>
+        </div>
+      </aside>
+
+      
+      <!-- Main Content -->
+      <main class="col px-4">
+        {% block content %}
+
+
+        
+        {% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
+  <!-- Custom JS -->
+  <script src="/static/js/sidebar.js"></script>
+
+  <!-- Initialize Bootstrap tooltips -->
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Add this inside the <head> -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+  <title>AI-ML Roadmap</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #fddf8b;
+      font-family: Helvetica, sans-serif;
+      margin: 0;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .timeline::after {
+      content: '';
+      position: absolute;
+      width: 6px;
+      background-color: white;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: -3px;
+    }
+
+    .content h2 {
+      font-size: 1.3rem;
+    }
+
+    .container {
+      padding: 30px 50px;
+      position: relative;
+      background-color: inherit;
+      width: 50%;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .container::after {
+      content: '';
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      right: -17px;
+      background-color: #61D4E8;
+      border: 4px solid #2DA1E7;
+      top: 15px;
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .left {
+      left: 0;
+      animation: slideInLeft 1s ease-in-out;
+    }
+
+    .right {
+      left: 50%;
+      animation: slideInRight 1s ease-in-out;
+    }
+
+    .left::before {
+      content: " ";
+      height: 0;
+      position: absolute;
+      top: 22px;
+      width: 0;
+      z-index: 1;
+      right: 30px;
+      border: medium solid white;
+      border-width: 10px 0 10px 10px;
+      border-color: transparent transparent transparent white;
+    }
+
+    .right::before {
+      content: " ";
+      height: 0;
+      position: absolute;
+      top: 22px;
+      width: 0;
+      z-index: 1;
+      left: 30px;
+      border: medium solid white;
+      border-width: 10px 10px 10px 0;
+      border-color: transparent white transparent transparent;
+    }
+
+    .right::after {
+      left: -16px;
+    }
+
+    .content {
+      padding: 10px 30px;
+      background-color: #61D4E8;
+      position: relative;
+      border-radius: 6px;
+    }
+
+    .title {
+      padding: 5px;
+      background-color: #c1f6f6;
+      position: relative;
+      border-radius: 6px;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-100px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Popups */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-out;
+  }
+
+    .popup {
+      background: white;
+      padding: 20px;
+      width: 60%;
+      margin: 100px auto;
+      border-radius: 10px;
+      position: relative;
+      animation: zoomIn 0.5s ease-out;
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive adjustments */
+    @media screen and (max-width: 600px) {
+      .timeline::after {
+        left: 31px;
+      }
+
+      .container {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 25px;
+      }
+
+      .container::before {
+        left: 60px;
+        border: medium solid white;
+        border-width: 10px 10px 10px 0;
+        border-color: transparent white transparent transparent;
+      }
+
+      .left::after,
+      .right::after {
+        left: 15px;
+      }
+
+      .right {
+        left: 0%;
+      }
+    }
+
+    .popup {
+      font-weight: 500;
+      height: auto;
+      background-color: #c8f5fd;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #61D4E8;
+      color: white;
+    }
+
+    .header h1 {
+      margin: 0;
+    }
+
+    .header button {
+      background-color: #2DA1E7;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .header button:hover {
+      background-color: #1a81c6;
+    }
+
+    .content h2 i {
+      font-size: 2rem; /* Increase icon size */
+      margin-right: 10px; /* Space between icon and text */
+      vertical-align: sub;
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>AI-ML Roadmap</h1>
+    <button onclick="window.location.href='/FrontDesk';">DashBoard</button>
+  </div>
+
+  <div class="timeline">
+
+    <!-- Introduction to AI-ML -->
+    <div class="container left"
+      onclick="showPopup('Python Programming & Fundamentals', 'Python Introduction and Environment Setup, Python Syntax, Comments, Variables, Python Data Types and Operators, Python Data Structures: Lists, Tuples, Sets, Dictionaries, Control Structures: if-else, Loops, Introduction to Functions')">
+      <div class="content">
+        <p>Step 1</p>
+        <h2><span><i class='bx bxl-python'></i></span>Python Programming & Fundamentals</h2>
+      </div>
+    </div>
+
+    <!-- Python Programming & Fundamentals -->
+    <div class="container right"
+      onclick="showPopup('Introduction to AI-ML', 'Introduction to AI-ML, History of AI-ML, Life cycle of AI-ML, Key features of AI-ML, Applications of AI-ML, Model Learning, Supervised Learning, Unsupervised Learning')">
+      <div class="content">
+        <p>Step 2</p>
+        <h2><span><i class='bx bxs-brain'></i></span>Introduction to AI-ML</h2>
+      </div>
+    </div>
+
+    <!-- Object-Oriented & Advanced Python Concepts -->
+    <div class="container left"
+      onclick="showPopup('Object-Oriented & Advanced Python Concepts', 'OOP Concepts, Python Classes, Objects, Methods, Attributes, Inheritance, Polymorphism, Python Iterators, Iterable Objects, Exception Handling, File Handling')">
+      <div class="content">
+        <p>Step 3</p>
+        <h2><span><i class='bx bx-code-alt'></i></span>Object-Oriented & Advanced Python</h2>
+      </div>
+    </div>
+
+    <!-- Python Libraries: NumPy -->
+    <div class="container right"
+      onclick="showPopup('NumPy Library', 'Introduction to NumPy, NumPy Arrays, Array Operations, Array Indexing and Slicing, Shape and Reshaping, Mathematical Functions, Random Module, Linear Algebra, Broadcasting, File I/O')">
+      <div class="content">
+        <p>Step 4</p>
+        <h2><span><i class='bx bx-grid'></i></span>NumPy Library</h2>
+      </div>
+    </div>
+
+    <!-- Python Libraries: Pandas -->
+    <div class="container left"
+      onclick="showPopup('Pandas Library', 'Introduction to Pandas, Data Structures, Data Frames, Reading and Writing Data, Indexing and Selection, Data Cleaning, Data Manipulation, Statistical Analysis, Time Series Analysis, Visualization, Categorical Data, Pandasql')">
+      <div class="content">
+        <p>Step 5</p>
+        <h2><span><i class='bx bx-table'></i></span>Pandas Library</h2>
+      </div>
+    </div>
+
+    <!-- Python Libraries: Matplotlib -->
+    <div class="container right"
+      onclick="showPopup('Matplotlib Library', 'Introduction to Matplotlib, Installation, Importing Matplotlib, Basic Plotting, Labels and Titles, Legends, Subplots, Customizing Plots, Saving Figures, Common Types of Plots, 3D Plotting, Animations, Matplotlib Styles')">
+      <div class="content">
+        <p>Step 6</p>
+        <h2><span><i class='bx bx-chart'></i></span>Matplotlib Library</h2>
+      </div>
+    </div>
+
+    <!-- Python Libraries: Scikit-learn -->
+    <div class="container left"
+      onclick="showPopup('Scikit-learn Library', 'Introduction to Scikit-learn, Dataset Loading, Data Preprocessing, Train-Test Split, Feature Scaling, Model Building, Model Evaluation, Hyperparameter Tuning, Cross-Validation, Pipeline, Unsupervised Learning, Ensemble Methods')">
+      <div class="content">
+        <p>Step 7</p>
+        <h2><span><i class='bx bx-chart'></i></span>Scikit-learn Library</h2>
+      </div>
+    </div>
+
+    <!-- Python Libraries: TensorFlow -->
+    <div class="container right"
+      onclick="showPopup('TensorFlow Library', 'Introduction to TensorFlow, Fundamentals of TensorFlow, Computation Graph, TensorFlow 2.x Eager Execution, Keras, Layers and Models, Loss Functions, Optimizers, Training a Model, TensorBoard, Saving and Loading Models, TensorFlow Serving, TensorFlow Lite, TensorFlow Extended (TFX)')">
+      <div class="content">
+        <p>Step 8</p>
+        <h2> <span><i class='bx bx-tachometer'></i></span>TensorFlow Library</h2>
+      </div>
+    </div>
+
+    <!-- Introduction to Machine Learning -->
+    <div class="container left"
+      onclick="showPopup('Introduction to Machine Learning', 'Basics of Machine Learning, Types of Machine Learning, Machine Learning Life Cycle, Data Acquisition')">
+      <div class="content">
+        <p>Step 9</p>
+        <h2><span><i class='bx bx-network-chart'></i></span>Introduction to Machine Learning</h2>
+      </div>
+    </div>
+
+    <!-- Supervised Learning Algorithms -->
+    <div class="container right"
+      onclick="showPopup('Supervised Learning Algorithms', 'Regression Analysis, Classification Algorithms: Logistic Regression, KNN, SVM, Decision Trees, Random Forests')">
+      <div class="content">
+        <p>Step 10</p>
+        <h2><span><i class='bx bx-line-chart'></i></span>Supervised Learning Algorithms</h2>
+      </div>
+    </div>
+
+    <!-- Unsupervised Learning Algorithms -->
+    <div class="container left"
+      onclick="showPopup('Unsupervised Learning Algorithms', 'Clustering Algorithms: Hierarchical Clustering, K-Means Clustering')">
+      <div class="content">
+        <p>Step 11</p>
+        <h2><span><i class='bx bx-line-chart'></i></span>Unsupervised Learning Algorithms</h2>
+      </div>
+    </div>
+
+    <!-- Deep Learning Fundamentals -->
+    <div class="container right"
+      onclick="showPopup('Deep Learning Fundamentals', 'Introduction to Neural Networks, Deep Learning Libraries: TensorFlow, Keras, PyTorch, CNNs, RNNs')">
+      <div class="content">
+        <p>Step 13</p>
+        <h2><span><i class='bx bx-brain'></i></span>Deep Learning Fundamentals</h2>
+      </div>
+    </div>
+
+    <!-- Large Language Models (LLMs) -->
+    <div class="container left"
+      onclick="showPopup('Large Language Models (LLMs)', 'Overview of LLMs, Introduction to BERT, Pretraining and Fine-tuning LLMs')">
+      <div class="content">
+        <p>Step 14</p>
+        <h2><span><i class='bx bx-message-detail'></i></span>Large Language Models (LLMs)</h2>
+      </div>
+    </div>
+
+    <!-- Project Demonstration and Assignment -->
+    <div class="container right"
+      onclick="showPopup('Project Demonstration and Assignment', 'Project Demonstration, Assignment')">
+      <div class="content">
+        <p>Step 15</p>
+        <h2><span><i class='bx bx-task'></i></span>Project Demonstration & Assignment</h2>
+      </div>
+    </div>
+
+    <!-- Career After This Course -->
+<div class="container "
+onclick="showPopup('Career After This Course', 'Explore career opportunities in AI-ML: AI Engineer, Data Scientist, Machine Learning Engineer, Research Scientist, AI Product Manager, etc.')">
+<div class="content">
+  <h2><span><i class='bx bx-briefcase'></i></span>Career After This Course</h2>
+</div>
+</div>
+
+
+  </div>
+
+  <!-- Popup Structure -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+      <span class="popup-close" onclick="closePopup()">&#10006;</span>
+      <h2 id="popupTitle"></h2>
+      <p id="popupContent"></p>
+    </div>
+  </div>
+
+  <script>
+    function showPopup(title, content) {
+      document.getElementById('popupTitle').innerText = title;
+      document.getElementById('popupContent').innerText = content;
+      document.getElementById('popupOverlay').style.display = 'block';
+    }
+
+    function closePopup() {
+      document.getElementById('popupOverlay').style.display = 'none';
+    }
+  </script>
+</body>
+
+</html>
